@@ -1,17 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
+	"yu-croco.com/GolangOnLambdaDynamo/src/dynamodb"
+	"yu-croco.com/GolangOnLambdaDynamo/src/model"
 )
 
-type Response struct {
-	Message string `json:"message"`
-}
+func Handler() error {
+	user := model.User{
+		UserId: 1,
+		UserName: "Taro",
+	}
 
-func Handler() (Response, error) {
-	return Response{
-		Message: "Go Serverless v1.0! Your function executed successfully!",
-	}, nil
+	timestamps, fetchErr := dynamodb.FetchTimestamps(user)
+	if fetchErr != nil {
+		return fetchErr
+	}
+
+	fmt.Println(timestamps)
+
+	return nil
 }
 
 func main() {
